@@ -9,6 +9,18 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'sku',
+        'name',
+        'price',
+        'weight',
+        'descriptions',
+        'thumbnail',
+        'image',
+        'category',
+        'stock',
+    ];
+
     // Relacion Uno a Muchos 
     public function order_details()
     {
