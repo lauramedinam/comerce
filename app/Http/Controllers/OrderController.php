@@ -6,8 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
-{
-    /**
+{/**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -27,13 +26,13 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'customer_id'      => 'required|exists:customers,id',
+            'customer_id'      => 'required|integer|exists:customers,id',
             'ammount'          => 'required|numeric|min:0',
-            'shipping_address' => 'required|string|max:255',
-            'order_address'    => 'required|string|max:255',
-            'order_email'      => 'required|email',
-            'order_date'       => 'nullable|string',
-            'order_status'     => 'sometimes|string',
+            'shipping_address' => 'required|string',
+            'order_address'    => 'required|string',
+            'order_email'      => 'required|string|email',
+            'order_date'       => 'required|date',
+            'order_status'     => 'required|string|max:50',
         ]);
 
         $order = Order::create($request->all());
@@ -63,13 +62,13 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $request->validate([
-            'customer_id'      => 'sometimes|exists:customers,id',
+            'customer_id'      => 'sometimes|integer|exists:customers,id',
             'ammount'          => 'sometimes|numeric|min:0',
-            'shipping_address' => 'sometimes|string|max:255',
-            'order_address'    => 'sometimes|string|max:255',
-            'order_email'      => 'sometimes|email',
-            'order_date'       => 'nullable|string',
-            'order_status'     => 'sometimes|string',
+            'shipping_address' => 'sometimes|string',
+            'order_address'    => 'sometimes|string',
+            'order_email'      => 'sometimes|string|email',
+            'order_date'       => 'sometimes|date',
+            'order_status'     => 'sometimes|string|max:50',
         ]);
 
         $order->update($request->all());

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    
-      /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -27,18 +27,18 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'firstname'      => 'required|exists:customers,id',
-            'lastname'          => 'required|numeric|min:0',
-            'email' => 'required|string|max:255',
-            'password'    => 'required|string|max:255',
-            'phone'      => 'required|email',
-            'address'       => 'nullable|string',
-            'order_status'     => 'sometimes|string',
+            'email'                    => 'required|string|email|max:255|unique:customers,email',
+            'password'                 => 'required|string|min:6|max:255',
+            'full_name'                => 'required|string|max:255',
+            'billing_address'          => 'nullable|string|max:255',
+            'default_shipping_address' => 'nullable|string|max:255',
+            'country'                  => 'nullable|string|max:100',
+            'phone'                    => 'nullable|string|max:50',
         ]);
 
         $customer = Customer::create($request->all());
 
-        return $customer;
+        return response()->json(Customer::all());
     }
 
     /**
@@ -50,7 +50,7 @@ class CustomerController extends Controller
     public function show($id)
     {
         $customer = Customer::findOrFail($id);
-        return $customer;
+        return response()->json($customer);
     }
 
     /**
@@ -63,18 +63,18 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $request->validate([
-            'firstname'      => 'sometimes|exists:customers,id',
-            'lastname'          => 'sometimes|numeric|min:0',
-            'email' => 'sometimes|string|max:255',
-            'password'    => 'sometimes|string|max:255',
-            'phone'      => 'sometimes|email',
-            'address'       => 'nullable|string',
-            'order_status'     => 'sometimes|string',
+            'email'                    => 'sometimes|string|email|max:255|unique:customers,email,' . $customer->id,
+            'password'                 => 'sometimes|string|min:6|max:255',
+            'full_name'                => 'sometimes|string|max:255',
+            'billing_address'          => 'sometimes|nullable|string|max:255',
+            'default_shipping_address' => 'sometimes|nullable|string|max:255',
+            'country'                  => 'sometimes|nullable|string|max:100',
+            'phone'                    => 'sometimes|nullable|string|max:50',
         ]);
 
-        $order->update($request->all());
+        $customer->update($request->all());
 
-        return $order;
+        return response()->json($customer);
     }
 
     /**
@@ -83,7 +83,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer )
+    public function destroy(Customer $customer)
     {
         $customer->delete();
         return $customer;
